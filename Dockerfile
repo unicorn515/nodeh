@@ -1,6 +1,5 @@
-FROM node:4.3
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-COPY . /usr/src/app
-EXPOSE 238
-ENTRYPOINT node x.js
+FROM node
+RUN mkdir -p /usr/src
+WORKDIR /usr/src
+EXPOSE 3000
+ENTRYPOINT npm install -registry=http://registry.npm.taobao.org

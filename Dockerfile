@@ -1,6 +1,5 @@
 FROM node
-RUN mkdir -p /usr/src/app
-RUN npm i -g nodeppt
-WORKDIR /usr/src/app
-EXPOSE 238
-ENTRYPOINT nodeppt generate r.md -a
+RUN mkdir -p /usr/src
+WORKDIR /usr/src
+EXPOSE 3000
+ENTRYPOINT node src/server.js

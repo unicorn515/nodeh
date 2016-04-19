@@ -14,9 +14,13 @@ module.exports = function (done) {
 					return v;
 				});
 			}
-			req.body.rep = [];
+			if ('rep' in req.body) req.body.rep = req.body.rep.split('_').map(function (v) {
+				return v.trim();
+			}).filter(function (v) {
+				return v;
+			});else req.body.rep = [];
 			const mo = yield $.method('restm').call(req.body);
-			res.apiSuccess({ mo });
+			res.apiSuccess({ mo: mo });
 		});
 
 		return function (_x, _x2, _x3) {
@@ -26,7 +30,7 @@ module.exports = function (done) {
 	$.router.post('/api/rest/u', (() => {
 		var ref = _asyncToGenerator(function* (req, res, next) {
 			const mo = yield $.method('restu').call(req.body);
-			res.apiSuccess({ mo });
+			res.apiSuccess({ mo: mo });
 		});
 
 		return function (_x4, _x5, _x6) {
@@ -36,7 +40,7 @@ module.exports = function (done) {
 	$.router.get('/api/rest/t', (() => {
 		var ref = _asyncToGenerator(function* (req, res, next) {
 			const mo = yield $.method('getmtl').call();
-			res.apiSuccess({ mo });
+			res.apiSuccess({ mo: mo });
 		});
 
 		return function (_x7, _x8, _x9) {
@@ -51,7 +55,7 @@ module.exports = function (done) {
 				return v;
 			});
 			const v1 = yield (0, _ap.uget)(req.body);
-			res.apiSuccess({ v1 });
+			res.apiSuccess({ v1: v1 });
 		});
 
 		return function (_x10, _x11, _x12) {
@@ -61,7 +65,7 @@ module.exports = function (done) {
 	$.router.post('/api/sd/addu', (() => {
 		var ref = _asyncToGenerator(function* (req, res, next) {
 			const v1 = yield (0, _ap.usign)(req.body);
-			res.apiSuccess({ v1 });
+			res.apiSuccess({ v1: v1 });
 		});
 
 		return function (_x13, _x14, _x15) {
@@ -71,10 +75,20 @@ module.exports = function (done) {
 	$.router.post('/api/sd/addm', (() => {
 		var ref = _asyncToGenerator(function* (req, res, next) {
 			const v1 = yield (0, _ap.cmt)(req.body);
-			res.apiSuccess({ v1 });
+			res.apiSuccess({ v1: v1 });
 		});
 
 		return function (_x16, _x17, _x18) {
+			return ref.apply(this, arguments);
+		};
+	})());
+	$.router.post('/api/sd/ghis', (() => {
+		var ref = _asyncToGenerator(function* (req, res, next) {
+			const v1 = yield (0, _ap.ghis)(req.body);
+			res.apiSuccess({ v1: v1 });
+		});
+
+		return function (_x19, _x20, _x21) {
 			return ref.apply(this, arguments);
 		};
 	})());
@@ -85,11 +99,23 @@ module.exports = function (done) {
 			}).filter(function (v) {
 				return v;
 			});
-			const v1 = yield $.method('gtmt').call(req.body);
-			res.apiSuccess({ v1 });
+			const d = yield $.method('gtmt').call(req.body);
+			var q1 = {};
+			var v1 = {};
+			var msgs = {};
+			var ls = req.body.tags;
+			q1.accid = d.cuno;
+			v1.mtno = d.mtno;
+			for (var i = 0; i < ls.length; i++) {
+				q1.tid = ls[i];
+				var j = yield (0, _ap.ghis)(q1);
+				msgs[ls[i]] = j.msgs;
+			}
+			v1.msgs = msgs;
+			res.apiSuccess({ v1: v1 });
 		});
 
-		return function (_x19, _x20, _x21) {
+		return function (_x22, _x23, _x24) {
 			return ref.apply(this, arguments);
 		};
 	})());
@@ -101,20 +127,35 @@ module.exports = function (done) {
 				return v;
 			});
 			const v1 = yield $.method('addrep').call(req.body);
-			res.apiSuccess({ v1 });
+			res.apiSuccess({ v1: v1 });
 		});
 
-		return function (_x22, _x23, _x24) {
+		return function (_x25, _x26, _x27) {
+			return ref.apply(this, arguments);
+		};
+	})());
+	$.router.post('/api/rest/addtag', (() => {
+		var ref = _asyncToGenerator(function* (req, res, next) {
+			req.body.tags = req.body.tags.split('_').map(function (v) {
+				return v.trim();
+			}).filter(function (v) {
+				return v;
+			});
+			const v1 = yield $.method('addtag').call(req.body);
+			res.apiSuccess({ v1: v1 });
+		});
+
+		return function (_x28, _x29, _x30) {
 			return ref.apply(this, arguments);
 		};
 	})());
 	$.router.post('/api/rest/rep', (() => {
 		var ref = _asyncToGenerator(function* (req, res, next) {
 			var v1 = yield $.method('getrep').call(req.body);
-			res.apiSuccess({ v1 });
+			res.apiSuccess({ v1: v1 });
 		});
 
-		return function (_x25, _x26, _x27) {
+		return function (_x31, _x32, _x33) {
 			return ref.apply(this, arguments);
 		};
 	})());

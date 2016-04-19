@@ -26,7 +26,7 @@ module.exports = function (done) {
 				nt = u2.map(function (e) {
 					return e.mono;
 				});
-				res.apiSuccess({ para: 11, mt, nt });
+				res.apiSuccess({ para: 11, mt: mt, nt: nt });
 			}
 		});
 
@@ -120,7 +120,6 @@ module.exports = function (done) {
 			q2.owner = v1.cuno;
 			if (v1.cuno === usr) {
 				var cons = yield $.method('delmt').call(v1);
-				console.log(cons);
 				for (var i = 0; i < mlist.length; i++) {
 					yield $.method('resetusr').call(mlist[i]);
 				}
@@ -130,7 +129,6 @@ module.exports = function (done) {
 				}
 			} else {
 				q2.member = usr;
-				console.log(q2);
 				yield $.method('resetusr').call(usr);
 				for (var i = 0; i < tlist.length; i++) {
 					q2.tid = tlist[i];

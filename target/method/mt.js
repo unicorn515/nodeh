@@ -69,13 +69,24 @@ module.exports = function (done) {
       return ref.apply(this, arguments);
     };
   })());
+  $.method('addtag').register((() => {
+    var ref = _asyncToGenerator(function* (p) {
+      var z = yield $.model.mo.findOne({ mono: p.mono });
+      p.tags = z.tags.concat(p.tags);
+      return $.model.mo.update({ mono: p.mono }, { $set: p });
+    });
+
+    return function (_x6) {
+      return ref.apply(this, arguments);
+    };
+  })());
   $.method('getrep').register((() => {
     var ref = _asyncToGenerator(function* (q) {
       var z = yield $.model.mt.findOne({ mtno: q.p }, { moid: 1 }).populate('moid', 'rep mono');
       return z.moid; //
     });
 
-    return function (_x6) {
+    return function (_x7) {
       return ref.apply(this, arguments);
     };
   })());
@@ -85,7 +96,7 @@ module.exports = function (done) {
       return $.model.user.update({ userno: params }, { $set: update });
     });
 
-    return function (_x7) {
+    return function (_x8) {
       return ref.apply(this, arguments);
     };
   })());
@@ -95,7 +106,7 @@ module.exports = function (done) {
       return $.model.user.update({ userno: params }, { $set: update });
     });
 
-    return function (_x8) {
+    return function (_x9) {
       return ref.apply(this, arguments);
     };
   })());

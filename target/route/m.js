@@ -104,6 +104,7 @@ module.exports = function (done) {
 			console.log(req.body);
 			var q1 = {};
 			var q2 = {};
+			var reco = {};
 			var usr = req.body.uid;
 			var tlist = req.body.tn.split('_').map(function (v) {
 				return v.trim();
@@ -118,31 +119,72 @@ module.exports = function (done) {
 			q1.tags = tlist;
 			var v1 = yield $.method('gtmt').call(q1);
 			q2.owner = v1.cuno;
+			q2.accid = v1.cuno;
 			if (v1.cuno === usr) {
 				var cons = yield $.method('delmt').call(v1);
-				console.log(cons);
 				for (var i = 0; i < mlist.length; i++) {
 					yield $.method('resetusr').call(mlist[i]);
 				}
 				for (var i = 0; i < tlist.length; i++) {
 					q2.tid = tlist[i];
+					var t = yield (0, _ap.ghis)(q2);
+					reco[tlist[i]] = t.msgs;
 					yield (0, _ap.dism)(q2);
 				}
+				req.session.tl = tlist;
+				req.session.ss = reco;
+				res.apiSuccess(0);
 			} else {
 				q2.member = usr;
-				console.log(q2);
 				yield $.method('resetusr').call(usr);
 				for (var i = 0; i < tlist.length; i++) {
 					q2.tid = tlist[i];
 					yield (0, _ap.leam)(q2);
 				}
+				res.apiSuccess(1);
 			}
-			res.apiSuccess('ye');
 		});
 
 		return function (_x7, _x8, _x9) {
 			return ref.apply(this, arguments);
 		};
 	})());
+	$.router.post('/api/s4', (() => {
+		var ref = _asyncToGenerator(function* (req, res, next) {
+			var q2 = {};
+			var q3 = {};
+			var tlist = req.body.tn.split('_').map(function (v) {
+				return v.trim();
+			}).filter(function (v) {
+				return v;
+			});
+			var mlist = req.body.tm.split('_').map(function (v) {
+				return v.trim();
+			}).filter(function (v) {
+				return v;
+			});
+			var q1 = { tags: tlist };
+			var v1 = yield $.method('gtmt').call(q1);
+			var mas = v1.cuno;
+			mlist.splice(mlist.indexOf(mas), 1);
+			q2.tname = req.body.tnm;
+			q2.owner = mas;
+			q2.msg = 'he';
+			const v2 = yield (0, _ap.cmt)(q2);
+			v1.tags.push(v2.tid);
+			q3.tid = v2.tid;
+			q3.owner = mas;
+			q3.members = mlist;
+			q3.msg = 'he';
+			yield (0, _ap.jmt)(q3);
+			yield $.method('upmt').call(v1);
+			res.apiSuccess(1);
+		});
+
+		return function (_x10, _x11, _x12) {
+			return ref.apply(this, arguments);
+		};
+	})());
+
 	done();
 };

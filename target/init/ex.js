@@ -1,5 +1,9 @@
 'use strict';
 
+var _expressSession = require('express-session');
+
+var _expressSession2 = _interopRequireDefault(_expressSession);
+
 var _express = require('express');
 
 var _express2 = _interopRequireDefault(_express);
@@ -16,12 +20,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } } //��static
 
+
 module.exports = function (done) {
   const app = (0, _express2.default)();
   app.use(_bodyParser2.default.urlencoded({ extended: false }));
   app.use(_bodyParser2.default.json());
+  app.use((0, _expressSession2.default)({
+    secret: $.config.get('web.session.secret')
+  }));
   const router = _express2.default.Router();
-
   const routerwrap = {};
   ['get', 'head', 'post', 'put', 'del', 'delete'].forEach(method => {
     routerwrap[method] = function (path) {

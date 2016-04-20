@@ -14,7 +14,11 @@ module.exports = function (done) {
 					return v;
 				});
 			}
-			req.body.rep = [];
+			if ('rep' in req.body) req.body.rep = req.body.rep.split('_').map(function (v) {
+				return v.trim();
+			}).filter(function (v) {
+				return v;
+			});else req.body.rep = [];
 			const mo = yield $.method('restm').call(req.body);
 			res.apiSuccess({ mo });
 		});
@@ -78,6 +82,16 @@ module.exports = function (done) {
 			return ref.apply(this, arguments);
 		};
 	})());
+	$.router.post('/api/sd/ghis', (() => {
+		var ref = _asyncToGenerator(function* (req, res, next) {
+			const v1 = yield (0, _ap.ghis)(req.body);
+			res.apiSuccess({ v1 });
+		});
+
+		return function (_x19, _x20, _x21) {
+			return ref.apply(this, arguments);
+		};
+	})());
 	$.router.post('/api/rest/gtmt', (() => {
 		var ref = _asyncToGenerator(function* (req, res, next) {
 			req.body.tags = req.body.tags.split('_').map(function (v) {
@@ -85,11 +99,23 @@ module.exports = function (done) {
 			}).filter(function (v) {
 				return v;
 			});
-			const v1 = yield $.method('gtmt').call(req.body);
+			const d = yield $.method('gtmt').call(req.body);
+			var q1 = {};
+			var v1 = {};
+			var msgs = {};
+			var ls = req.body.tags;
+			q1.accid = d.cuno;
+			v1.mtno = d.mtno;
+			for (var i = 0; i < ls.length; i++) {
+				q1.tid = ls[i];
+				var j = yield (0, _ap.ghis)(q1);
+				msgs[ls[i]] = j.msgs;
+			}
+			v1.msgs = msgs;
 			res.apiSuccess({ v1 });
 		});
 
-		return function (_x19, _x20, _x21) {
+		return function (_x22, _x23, _x24) {
 			return ref.apply(this, arguments);
 		};
 	})());
@@ -104,7 +130,22 @@ module.exports = function (done) {
 			res.apiSuccess({ v1 });
 		});
 
-		return function (_x22, _x23, _x24) {
+		return function (_x25, _x26, _x27) {
+			return ref.apply(this, arguments);
+		};
+	})());
+	$.router.post('/api/rest/addtag', (() => {
+		var ref = _asyncToGenerator(function* (req, res, next) {
+			req.body.tags = req.body.tags.split('_').map(function (v) {
+				return v.trim();
+			}).filter(function (v) {
+				return v;
+			});
+			const v1 = yield $.method('addtag').call(req.body);
+			res.apiSuccess({ v1 });
+		});
+
+		return function (_x28, _x29, _x30) {
 			return ref.apply(this, arguments);
 		};
 	})());
@@ -114,7 +155,28 @@ module.exports = function (done) {
 			res.apiSuccess({ v1 });
 		});
 
-		return function (_x25, _x26, _x27) {
+		return function (_x31, _x32, _x33) {
+			return ref.apply(this, arguments);
+		};
+	})());
+	$.router.get('/session', (() => {
+		var ref = _asyncToGenerator(function* (req, res, next) {
+			var msgs = req.session.ss;
+			var teamlist = req.session.tl;
+			//res.json(msgs);
+			var str = '<h1>list is</h1>';
+			var tmpa = [];
+			for (var i = 0; i < teamlist.length; i++) {
+				var user = teamlist[i];
+				tmpa = msgs[user];
+				for (var j = 0; j < tmpa.length; j++) {
+					if (tmpa[j].type === 0) str = str + tmpa[j].from + ' @' + tmpa[j].sendtime + ' ' + tmpa[j].body.msg + '</br>';
+				}
+			}
+			res.end(str);
+		});
+
+		return function (_x34, _x35, _x36) {
 			return ref.apply(this, arguments);
 		};
 	})());
